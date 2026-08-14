@@ -184,7 +184,7 @@
   <div class="progress-row">
     <span class="progress-label">Заповнено</span>
     <div class="progress-bar-outer"><div class="progress-bar-inner" id="bar"></div></div>
-    <span class="progress-count" id="count">0/9</span>
+    <span class="progress-count" id="count">0/6</span>
   </div>
 
   <div class="filenote">
@@ -277,43 +277,9 @@
     </div>
   </div>
 
-  <div class="item" data-q="Чи зачіпає це інші системи, підрозділи або процеси?">
-    <div class="item-top">
-      <div class="num">6</div>
-      <div class="item-body">
-        <h3>Чи зачіпає це інші системи, підрозділи або процеси?</h3>
-        <p>Наприклад: потрібна інтеграція з іншою системою, дані від суміжного підрозділу, документ чи звіт, на який це вплине. Технічну відповідь знати не обов'язково — досить припущення "здається, це зачепить...".</p>
-        <textarea maxlength="10000" placeholder="Ваша відповідь..."></textarea>
-        <div class="charcount">0/10000</div>
-        <div class="imgrow">
-          <label class="filebtn">🖼️ Додати скріншот<input type="file" accept="image/*" multiple></label>
-          <div class="thumbs"></div>
-        </div>
-      </div>
-      <input type="checkbox">
-    </div>
-  </div>
-
-  <div class="item" data-q="Чи є дедлайн або вимога, яка його визначає?">
-    <div class="item-top">
-      <div class="num">7</div>
-      <div class="item-body">
-        <h3>Чи є дедлайн або вимога, яка його визначає?</h3>
-        <p>Конкретна дата, нормативний документ, внутрішнє рішення — що саме і чому саме до цього терміну.</p>
-        <textarea maxlength="10000" placeholder="Ваша відповідь..."></textarea>
-        <div class="charcount">0/10000</div>
-        <div class="imgrow">
-          <label class="filebtn">🖼️ Додати скріншот<input type="file" accept="image/*" multiple></label>
-          <div class="thumbs"></div>
-        </div>
-      </div>
-      <input type="checkbox">
-    </div>
-  </div>
-
   <div class="item" data-q="Чи є приклади або зразки?">
     <div class="item-top">
-      <div class="num">8</div>
+      <div class="num">6</div>
       <div class="item-body">
         <h3>Чи є приклади або зразки?</h3>
         <p>Скріншоти, посилання, приклад з іншої системи чи вже наявного процесу.</p>
@@ -328,12 +294,12 @@
     </div>
   </div>
 
-  <div class="item" data-q="Чого ця задача точно не стосується?">
+  <div class="item" data-q="Чи є дедлайн або вимога, яка його визначає?" data-optional="true">
     <div class="item-top">
-      <div class="num">9</div>
+      <div class="num">7</div>
       <div class="item-body">
-        <h3>Чого ця задача точно не стосується?</h3>
-        <p>Якщо є суміжний випадок, який могли б сплутати з цією задачею — вкажіть, що він сюди не входить. Наприклад: «стосується тільки ФОП, ЮО без змін» або «тільки веб-версія, мобільний застосунок не чіпаємо». Немає такого — напишіть «обмежень немає».</p>
+        <h3>Чи є дедлайн або вимога, яка його визначає?</h3>
+        <p>Конкретна дата, нормативний документ, внутрішнє рішення — що саме і чому саме до цього терміну.</p>
         <textarea maxlength="10000" placeholder="Ваша відповідь..."></textarea>
         <div class="charcount">0/10000</div>
         <div class="imgrow">
@@ -370,6 +336,7 @@
   });
 
   const items = document.querySelectorAll('.item');
+  const requiredItems = Array.from(items).filter(item => item.dataset.optional !== 'true');
   const bar = document.getElementById('bar');
   const count = document.getElementById('count');
   const docBtn = document.getElementById('docBtn');
@@ -385,8 +352,8 @@
   }
 
   function update(){
-    const total = items.length;
-    const checked = document.querySelectorAll('.item input[type=checkbox]:checked').length;
+    const total = requiredItems.length;
+    const checked = requiredItems.filter(item => item.querySelector('input[type=checkbox]').checked).length;
     const pct = total ? Math.round((checked/total)*100) : 0;
     bar.style.width = pct + '%';
     count.textContent = `${checked}/${total}`;
@@ -481,10 +448,8 @@
     'Хто буде цим користуватися?': 'Користувачі та зацікавлені сторони',
     'Як це відбувається зараз?': 'Поточний стан (як зараз)',
     'Що саме має змінитися?': 'Бажаний результат (що має змінитися)',
-    'Чи зачіпає це інші системи, підрозділи або процеси?': 'Суміжні системи та залежності',
     'Чи є дедлайн або вимога, яка його визначає?': 'Терміни та обмеження',
     'Чи є приклади або зразки?': 'Приклади та референси',
-    'Чого ця задача точно не стосується?': 'Межі задачі (що не входить)',
   };
 
   docBtn.addEventListener('click', () => {
