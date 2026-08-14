@@ -184,7 +184,7 @@
   <div class="progress-row">
     <span class="progress-label">Заповнено</span>
     <div class="progress-bar-outer"><div class="progress-bar-inner" id="bar"></div></div>
-    <span class="progress-count" id="count">0/6</span>
+    <span class="progress-count" id="count">0/4</span>
   </div>
 
   <div class="filenote">
@@ -192,29 +192,12 @@
     <br><b>Важливо:</b> нічого не зберігається автоматично — не оновлюйте й не закривайте сторінку, поки не натиснете кнопку внизу й не завантажите готовий документ.
   </div>
 
-  <div class="item" data-q="Що потрібно?">
+  <div class="item" data-q="Що потрібно і навіщо?">
     <div class="item-top">
       <div class="num">1</div>
       <div class="item-body">
-        <h3>Що потрібно?</h3>
-        <p>Коротко, своїми словами: що саме ви хочете отримати в результаті.</p>
-        <textarea maxlength="10000" placeholder="Ваша відповідь..."></textarea>
-        <div class="charcount">0/10000</div>
-        <div class="imgrow">
-          <label class="filebtn">🖼️ Додати скріншот<input type="file" accept="image/*" multiple></label>
-          <div class="thumbs"></div>
-        </div>
-      </div>
-      <input type="checkbox">
-    </div>
-  </div>
-
-  <div class="item" data-q="Навіщо це потрібно?">
-    <div class="item-top">
-      <div class="num">2</div>
-      <div class="item-body">
-        <h3>Навіщо це потрібно?</h3>
-        <p>Яку проблему це вирішує або яку мету переслідує. "Що" без "навіщо" легко зрозуміти неправильно.</p>
+        <h3>Що потрібно і навіщо?</h3>
+        <p>Коротко, своїми словами: що саме ви хочете отримати в результаті, і яку проблему це вирішує або яку мету переслідує. "Що" без "навіщо" легко зрозуміти неправильно.</p>
         <textarea maxlength="10000" placeholder="Ваша відповідь..."></textarea>
         <div class="charcount">0/10000</div>
         <div class="imgrow">
@@ -228,7 +211,7 @@
 
   <div class="item" data-q="Хто буде цим користуватися?">
     <div class="item-top">
-      <div class="num">3</div>
+      <div class="num">2</div>
       <div class="item-body">
         <h3>Хто буде цим користуватися?</h3>
         <p>Клієнти, співробітники банку, конкретний підрозділ чи роль.</p>
@@ -245,7 +228,7 @@
 
   <div class="item" data-q="Як це відбувається зараз?">
     <div class="item-top">
-      <div class="num">4</div>
+      <div class="num">3</div>
       <div class="item-body">
         <h3>Як це відбувається зараз?</h3>
         <p>Поточний спосіб, якщо він є. Якщо немає — так і напишіть: "наразі немає". Якщо не знаєте всіх технічних деталей — не страшно, просто опишіть, що бачите зі свого боку, решту уточнимо самі.</p>
@@ -262,7 +245,7 @@
 
   <div class="item" data-q="Що саме має змінитися?">
     <div class="item-top">
-      <div class="num">5</div>
+      <div class="num">4</div>
       <div class="item-body">
         <h3>Що саме має змінитися?</h3>
         <p>Опишіть бажаний результат. Якщо можливо — у форматі "було / стало".</p>
@@ -277,9 +260,9 @@
     </div>
   </div>
 
-  <div class="item" data-q="Чи є приклади або зразки?">
+  <div class="item" data-q="Чи є приклади або зразки?" data-optional="true">
     <div class="item-top">
-      <div class="num">6</div>
+      <div class="num">5</div>
       <div class="item-body">
         <h3>Чи є приклади або зразки?</h3>
         <p>Скріншоти, посилання, приклад з іншої системи чи вже наявного процесу.</p>
@@ -296,7 +279,7 @@
 
   <div class="item" data-q="Чи є дедлайн або вимога, яка його визначає?" data-optional="true">
     <div class="item-top">
-      <div class="num">7</div>
+      <div class="num">6</div>
       <div class="item-body">
         <h3>Чи є дедлайн або вимога, яка його визначає?</h3>
         <p>Конкретна дата, нормативний документ, внутрішнє рішення — що саме і чому саме до цього терміну.</p>
@@ -443,8 +426,7 @@
   // Мапа "питання анкети" → "назва розділу в документі", щоб згенерований файл одразу
   // виглядав як структурований документ вимог, а не як список питання-відповідь.
   const SECTION_TITLES = {
-    'Що потрібно?': 'Опис запиту',
-    'Навіщо це потрібно?': 'Бізнес-мета',
+    'Що потрібно і навіщо?': 'Опис запиту та бізнес-мета',
     'Хто буде цим користуватися?': 'Користувачі та зацікавлені сторони',
     'Як це відбувається зараз?': 'Поточний стан (як зараз)',
     'Що саме має змінитися?': 'Бажаний результат (що має змінитися)',
