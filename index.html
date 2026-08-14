@@ -101,7 +101,32 @@
   }
   .clear-btn:hover{background:#faf7f0;border-color:#c0392b;color:#c0392b;}
 
-  @media print{ .progress-row,.doc-btn,.clear-btn{display:none;} body{background:#fff;} }
+  .pdf-btn{
+    display:block;width:100%;margin-top:8px;padding:11px;border:1px solid #bfe0d1;border-radius:12px;
+    font-size:.86rem;font-weight:600;cursor:not-allowed;background:var(--surface);color:var(--muted);
+    transition:background .2s ease, border-color .2s ease, color .2s ease;
+  }
+  .pdf-btn:enabled{border-color:#0f7a52;color:#0f7a52;cursor:pointer;}
+  .pdf-btn:enabled:hover{background:#e3f6ee;}
+  .pdf-hint{
+    font-size:.78rem;color:var(--ink2);text-align:center;margin:6px 0 0;
+  }
+  .pdf-hint b{color:#0f7a52;}
+
+  @media print{
+    .progress-row,.doc-btn,.clear-btn,.pdf-btn,.pdf-hint,.filenote,.note{display:none;}
+    .item input[type=checkbox]{display:none;}
+    .imgrow label.filebtn{display:none;}
+    .thumb .rm{display:none;}
+    body{background:#fff;}
+    .hero{background:#fff !important;color:#12294f !important;padding:0 0 10px;border-radius:0;}
+    .hero .eyebrow{color:#52514e !important;}
+    .hero p{color:#52514e !important;}
+    .item{break-inside:avoid;border:none;box-shadow:none;padding:10px 0;margin-bottom:6px;}
+    .item textarea{border:none;background:transparent;resize:none;overflow:visible;padding:0;color:#000;}
+    .thumb{width:230px;height:auto;border-radius:6px;}
+    .thumb img{width:100%;height:auto;object-fit:contain;}
+  }
 </style>
 </head>
 <body>
@@ -280,6 +305,8 @@
   <div class="note">Немає відповіді на якийсь пункт? Це нормально — просто позначте галочкою, що пункт розглянуто, навіть якщо коментар короткий на кшталт "не застосовується". Головне — не залишати пункт без жодної позначки.</div>
 
   <button class="doc-btn" id="docBtn" disabled>📄 Сформувати Word-документ</button>
+  <button class="pdf-btn" id="pdfBtn" disabled>🖨️ Зберегти як PDF</button>
+  <p class="pdf-hint"><b>Рекомендовано для iPhone / мобільних</b> — на телефоні Word-документ може не завантажитись коректно, а PDF через друк зберігається завжди, разом із прикріпленими картинками.</p>
   <button class="clear-btn" id="clearBtn">🗑️ Очистити форму</button>
 
 </div>
@@ -290,6 +317,15 @@
   const count = document.getElementById('count');
   const docBtn = document.getElementById('docBtn');
   const MAXLEN = 10000;
+  const ORIG_TITLE = document.title;
+
+  function getDateStr(){
+    const now = new Date();
+    const dd = String(now.getDate()).padStart(2, '0');
+    const mm = String(now.getMonth() + 1).padStart(2, '0');
+    const yyyy = now.getFullYear();
+    return `${dd}.${mm}.${yyyy}`;
+  }
 
   function update(){
     const total = items.length;
@@ -298,6 +334,11 @@
     bar.style.width = pct + '%';
     count.textContent = `${checked}/${total}`;
     docBtn.disabled = !(total > 0 && checked === total);
+
+    const hasContent = Array.from(items).some(item =>
+      item.querySelector('textarea').value.trim().length > 0 || (item._images || []).length > 0
+    );
+    pdfBtn.disabled = !hasContent;
   }
 
   items.forEach(item => {
@@ -338,8 +379,10 @@
           t.querySelector('.rm').addEventListener('click', () => {
             item._images = item._images.filter(r => r !== rec);
             t.remove();
+            update();
           });
           thumbs.appendChild(t);
+          update();
         } catch (err) {
           alert(`Не вдалося додати «${file.name}»: файл пошкоджений або не є зображенням. Надішліть його окремо разом із бріфом.`);
         }
@@ -420,11 +463,7 @@
       </body>
     </html>`;
 
-    const now = new Date();
-    const dd = String(now.getDate()).padStart(2, '0');
-    const mm = String(now.getMonth() + 1).padStart(2, '0');
-    const yyyy = now.getFullYear();
-    const fileName = `CL_BRD brief_${dd}.${mm}.${yyyy}.doc`;
+    const fileName = `CL_BRD brief_${getDateStr()}.doc`;
 
     const blob = new Blob(['﻿', docHtml], { type: 'application/msword' });
     const url = URL.createObjectURL(blob);
@@ -435,6 +474,30 @@
     a.click();
     document.body.removeChild(a);
     setTimeout(() => URL.revokeObjectURL(url), 1000);
+  });
+
+  // "Зберегти як PDF" — через системний діалог друку браузера (Print → Save as PDF).
+  // Спрацьовує однаково на iOS/Android/десктопі, на відміну від Blob-завантаження .doc,
+  // і автоматично включає вже прикріплені картинки — без окремого експорту.
+  const pdfBtn = document.getElementById('pdfBtn');
+  const expandedTextareas = [];
+
+  pdfBtn.addEventListener('click', () => {
+    document.title = `CL_BRD brief_${getDateStr()}`;
+    document.querySelectorAll('.item textarea').forEach(ta => {
+      expandedTextareas.push({ el: ta, height: ta.style.height });
+      ta.style.height = 'auto';
+      ta.style.height = ta.scrollHeight + 'px';
+    });
+    window.print();
+  });
+
+  window.addEventListener('afterprint', () => {
+    document.title = ORIG_TITLE;
+    while (expandedTextareas.length) {
+      const rec = expandedTextareas.pop();
+      rec.el.style.height = rec.height;
+    }
   });
 
   const clearBtn = document.getElementById('clearBtn');
