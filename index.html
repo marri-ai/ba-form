@@ -4,13 +4,33 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Бриф перед постановкою задачі</title>
+<script>
+  (function(){
+    try {
+      var saved = localStorage.getItem('ba-form-theme');
+      var theme = saved || ((window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', theme);
+    } catch (e) {}
+  })();
+</script>
 <style>
   :root{
     --page:#f9f9f7; --surface:#ffffff;
     --ink:#0b0b0b; --ink2:#52514e; --muted:#898781;
     --border:rgba(11,11,11,0.10); --grid:#e1e0d9;
     --blue:#2a78d6; --good:#0f7a52; --good-soft:#e3f6ee;
+    --note-bg:#fff8ea; --note-border:#f0dfa8; --note-strong:#8a6d1a;
+    --accent-soft:#eef5fd;
   }
+  :root[data-theme="dark"]{
+    --page:#14161a; --surface:#1c1f24;
+    --ink:#edf0f2; --ink2:#b6bcc4; --muted:#7e848c;
+    --border:rgba(255,255,255,0.12); --grid:#2b2f36;
+    --blue:#5b9ee6; --good:#2fbf8f; --good-soft:rgba(47,191,143,0.16);
+    --note-bg:#2a2510; --note-border:#5c4a17; --note-strong:#e0b84a;
+    --accent-soft:rgba(91,158,230,0.14);
+  }
+  body{transition:background .2s ease, color .2s ease;}
   *{box-sizing:border-box;}
   body{margin:0;background:var(--page);color:var(--ink);
     font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.5;}
@@ -35,10 +55,10 @@
   .progress-count{font-weight:700;font-size:.88rem;color:var(--blue);white-space:nowrap;}
 
   .filenote{
-    font-size:.8rem;color:var(--ink2);background:#fff8ea;border:1px solid #f0dfa8;
+    font-size:.8rem;color:var(--ink2);background:var(--note-bg);border:1px solid var(--note-border);
     border-radius:10px;padding:10px 14px;margin-bottom:20px;
   }
-  .filenote b{color:#8a6d1a;}
+  .filenote b{color:var(--note-strong);}
 
   .item{
     background:var(--surface);border:1px solid var(--border);border-radius:14px;
@@ -70,7 +90,7 @@
   .imgrow{display:flex;align-items:center;gap:10px;margin-top:10px;flex-wrap:wrap;}
   .imgrow label.filebtn{
     font-size:.78rem;font-weight:600;color:var(--blue);border:1px dashed var(--blue);
-    border-radius:8px;padding:7px 12px;cursor:pointer;background:#eef5fd;
+    border-radius:8px;padding:7px 12px;cursor:pointer;background:var(--accent-soft);
   }
   .imgrow input[type=file]{display:none;}
   .thumbs{display:flex;gap:8px;flex-wrap:wrap;}
@@ -89,7 +109,7 @@
   .doc-btn{
     display:block;width:100%;margin-top:6px;padding:15px;border:none;border-radius:14px;
     font-size:1rem;font-weight:700;cursor:not-allowed;
-    background:#e1e0d9;color:var(--muted);transition:background .2s ease, color .2s ease;
+    background:var(--grid);color:var(--muted);transition:background .2s ease, color .2s ease;
   }
   .doc-btn:enabled{background:var(--blue);color:#fff;cursor:pointer;}
   .doc-btn:enabled:hover{background:#1c5cab;}
@@ -99,33 +119,48 @@
     font-size:.84rem;font-weight:600;cursor:pointer;background:var(--surface);color:var(--ink2);
     transition:background .2s ease, border-color .2s ease;
   }
-  .clear-btn:hover{background:#faf7f0;border-color:#c0392b;color:#c0392b;}
+  .clear-btn:hover{background:rgba(192,57,43,.12);border-color:#c0392b;color:#c0392b;}
 
   .pdf-btn{
-    display:block;width:100%;margin-top:8px;padding:11px;border:1px solid #bfe0d1;border-radius:12px;
+    display:block;width:100%;margin-top:8px;padding:11px;border:1px solid rgba(15,122,82,.4);border-radius:12px;
     font-size:.86rem;font-weight:600;cursor:not-allowed;background:var(--surface);color:var(--muted);
     transition:background .2s ease, border-color .2s ease, color .2s ease;
   }
-  .pdf-btn:enabled{border-color:#0f7a52;color:#0f7a52;cursor:pointer;}
-  .pdf-btn:enabled:hover{background:#e3f6ee;}
+  .pdf-btn:enabled{border-color:var(--good);color:var(--good);cursor:pointer;}
+  .pdf-btn:enabled:hover{background:var(--good-soft);}
   .pdf-hint{
     font-size:.78rem;color:var(--ink2);text-align:center;margin:6px 0 0;
   }
-  .pdf-hint b{color:#0f7a52;}
+  .pdf-hint b{color:var(--good);}
 
   .copylink-btn{
     display:block;width:100%;margin-top:8px;padding:10px;border:1px solid var(--border);border-radius:12px;
-    font-size:.82rem;font-weight:600;cursor:pointer;background:#eef5fd;color:var(--blue);
+    font-size:.82rem;font-weight:600;cursor:pointer;background:var(--accent-soft);color:var(--blue);
     transition:background .2s ease;
   }
-  .copylink-btn:hover{background:#dbe9fb;}
+  .copylink-btn:hover{filter:brightness(1.1);}
+
+  .theme-toggle{
+    position:fixed;top:14px;right:14px;z-index:50;width:40px;height:40px;border-radius:50%;
+    border:1px solid var(--border);background:var(--surface);color:var(--ink);font-size:1.05rem;
+    cursor:pointer;display:flex;align-items:center;justify-content:center;
+    box-shadow:0 2px 8px rgba(0,0,0,.15);transition:background .2s ease, color .2s ease;
+  }
 
   @media print{
-    .progress-row,.doc-btn,.clear-btn,.pdf-btn,.pdf-hint,.filenote,.note{display:none;}
+    /* Друк завжди виводиться у світлій палітрі, незалежно від обраної на екрані теми —
+       інакше при темній темі текст лишається світлим на форсовано білому аркуші. */
+    :root, :root[data-theme="dark"]{
+      --page:#ffffff; --surface:#ffffff;
+      --ink:#000000; --ink2:#3a3a3a; --muted:#666666;
+      --border:rgba(11,11,11,0.10); --grid:#e1e0d9;
+      --blue:#1c5cab; --good:#0f7a52; --good-soft:#e3f6ee;
+    }
+    .progress-row,.doc-btn,.clear-btn,.pdf-btn,.pdf-hint,.filenote,.note,.copylink-btn,.theme-toggle{display:none;}
     .item input[type=checkbox]{display:none;}
     .imgrow label.filebtn{display:none;}
     .thumb .rm{display:none;}
-    body{background:#fff;}
+    body{background:#fff;color:#000;}
     .hero{background:#fff !important;color:#12294f !important;padding:0 0 10px;border-radius:0;}
     .hero .eyebrow{color:#52514e !important;}
     .hero p{color:#52514e !important;}
@@ -137,6 +172,7 @@
 </style>
 </head>
 <body>
+<button class="theme-toggle" id="themeToggle" type="button" aria-label="Перемкнути тему" title="Перемкнути темну/світлу тему">🌙</button>
 <div class="wrap">
 
   <div class="hero">
@@ -321,6 +357,18 @@
 </div>
 
 <script>
+  const themeToggle = document.getElementById('themeToggle');
+  function setThemeIcon(theme){
+    themeToggle.textContent = theme === 'dark' ? '☀️' : '🌙';
+  }
+  setThemeIcon(document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light');
+  themeToggle.addEventListener('click', () => {
+    const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    setThemeIcon(next);
+    try { localStorage.setItem('ba-form-theme', next); } catch (e) {}
+  });
+
   const items = document.querySelectorAll('.item');
   const bar = document.getElementById('bar');
   const count = document.getElementById('count');
