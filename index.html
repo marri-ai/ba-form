@@ -93,17 +93,17 @@
     border-radius:8px;padding:7px 12px;cursor:pointer;background:var(--accent-soft);
   }
   .imgrow input[type=file]{display:none;}
+  .quickfill-btn{
+    font-size:.78rem;font-weight:600;color:var(--ink2);border:1px solid var(--border);
+    border-radius:8px;padding:7px 12px;cursor:pointer;background:var(--surface);
+  }
+  .quickfill-btn:hover{background:var(--page);}
   .thumbs{display:flex;gap:8px;flex-wrap:wrap;}
   .thumb{position:relative;width:56px;height:56px;border-radius:8px;overflow:hidden;border:1px solid var(--border);}
   .thumb img{width:100%;height:100%;object-fit:cover;display:block;}
   .thumb .rm{
     position:absolute;top:0;right:0;background:rgba(0,0,0,.55);color:#fff;border:none;
     width:18px;height:18px;font-size:.7rem;line-height:1;cursor:pointer;border-bottom-left-radius:6px;
-  }
-
-  .note{
-    font-size:.85rem;color:var(--ink2);background:var(--surface);
-    border-left:3px solid var(--blue);padding:12px 16px;border-radius:8px;margin:18px 0;
   }
 
   .doc-btn{
@@ -147,6 +147,12 @@
     box-shadow:0 2px 8px rgba(0,0,0,.15);transition:background .2s ease, color .2s ease;
   }
 
+  @media (hover: hover) and (pointer: fine){
+    /* Кнопки для збереження PDF через друк і обхід месенджерів-вебв'ю мають сенс лише
+       на тач-пристроях (телефон/планшет) — на десктопі з мишею є звичайний Ctrl+P. */
+    .pdf-btn,.copylink-btn,.pdf-hint{display:none;}
+  }
+
   @media print{
     /* Друк завжди виводиться у світлій палітрі, незалежно від обраної на екрані теми —
        інакше при темній темі текст лишається світлим на форсовано білому аркуші. */
@@ -156,9 +162,10 @@
       --border:rgba(11,11,11,0.10); --grid:#e1e0d9;
       --blue:#1c5cab; --good:#0f7a52; --good-soft:#e3f6ee;
     }
-    .progress-row,.doc-btn,.clear-btn,.pdf-btn,.pdf-hint,.filenote,.note,.copylink-btn,.theme-toggle{display:none;}
+    .progress-row,.doc-btn,.clear-btn,.pdf-btn,.pdf-hint,.filenote,.copylink-btn,.theme-toggle{display:none;}
     .item input[type=checkbox]{display:none;}
     .imgrow label.filebtn{display:none;}
+    .quickfill-btn{display:none;}
     .thumb .rm{display:none;}
     body{background:#fff;color:#000;}
     .hero{background:#fff !important;color:#12294f !important;padding:0 0 10px;border-radius:0;}
@@ -197,41 +204,7 @@
       <div class="num">1</div>
       <div class="item-body">
         <h3>Що потрібно і навіщо?</h3>
-        <p>Коротко, своїми словами: що саме ви хочете отримати в результаті, і яку проблему це вирішує або яку мету переслідує. "Що" без "навіщо" легко зрозуміти неправильно.</p>
-        <textarea maxlength="10000" placeholder="Ваша відповідь..."></textarea>
-        <div class="charcount">0/10000</div>
-        <div class="imgrow">
-          <label class="filebtn">🖼️ Додати скріншот<input type="file" accept="image/*" multiple></label>
-          <div class="thumbs"></div>
-        </div>
-      </div>
-      <input type="checkbox">
-    </div>
-  </div>
-
-  <div class="item" data-q="Хто буде цим користуватися?">
-    <div class="item-top">
-      <div class="num">2</div>
-      <div class="item-body">
-        <h3>Хто буде цим користуватися?</h3>
-        <p>Клієнти, співробітники банку, конкретний підрозділ чи роль.</p>
-        <textarea maxlength="10000" placeholder="Ваша відповідь..."></textarea>
-        <div class="charcount">0/10000</div>
-        <div class="imgrow">
-          <label class="filebtn">🖼️ Додати скріншот<input type="file" accept="image/*" multiple></label>
-          <div class="thumbs"></div>
-        </div>
-      </div>
-      <input type="checkbox">
-    </div>
-  </div>
-
-  <div class="item" data-q="Як це відбувається зараз?">
-    <div class="item-top">
-      <div class="num">3</div>
-      <div class="item-body">
-        <h3>Як це відбувається зараз?</h3>
-        <p>Поточний спосіб, якщо він є. Якщо немає — так і напишіть: "наразі немає". Якщо не знаєте всіх технічних деталей — не страшно, просто опишіть, що бачите зі свого боку, решту уточнимо самі.</p>
+        <p>Коротко, своїми словами: що саме ви хочете отримати в результаті, хто буде цим користуватися (клієнти, співробітники банку, конкретний підрозділ чи роль), і яку проблему це вирішує або яку мету переслідує. "Що" без "навіщо" легко зрозуміти неправильно.</p>
         <textarea maxlength="10000" placeholder="Ваша відповідь..."></textarea>
         <div class="charcount">0/10000</div>
         <div class="imgrow">
@@ -245,10 +218,10 @@
 
   <div class="item" data-q="Що саме має змінитися?">
     <div class="item-top">
-      <div class="num">4</div>
+      <div class="num">2</div>
       <div class="item-body">
         <h3>Що саме має змінитися?</h3>
-        <p>Опишіть бажаний результат. Якщо можливо — у форматі "було / стало".</p>
+        <p>Опишіть поточний стан і бажаний результат у форматі "було / стало". Якщо поточного способу немає — так і напишіть: "було — наразі немає". Якщо не знаєте всіх технічних деталей — не страшно, просто опишіть, що бачите зі свого боку, решту уточнимо самі.</p>
         <textarea maxlength="10000" placeholder="Ваша відповідь..."></textarea>
         <div class="charcount">0/10000</div>
         <div class="imgrow">
@@ -262,13 +235,14 @@
 
   <div class="item" data-q="Чи є приклади або зразки?" data-optional="true">
     <div class="item-top">
-      <div class="num">5</div>
+      <div class="num">3</div>
       <div class="item-body">
         <h3>Чи є приклади або зразки?</h3>
         <p>Скріншоти, посилання, приклад з іншої системи чи вже наявного процесу.</p>
         <textarea maxlength="10000" placeholder="Ваша відповідь..."></textarea>
         <div class="charcount">0/10000</div>
         <div class="imgrow">
+          <button type="button" class="quickfill-btn" data-fill="Немає.">✅ Немає</button>
           <label class="filebtn">🖼️ Додати скріншот<input type="file" accept="image/*" multiple></label>
           <div class="thumbs"></div>
         </div>
@@ -279,13 +253,14 @@
 
   <div class="item" data-q="Чи є дедлайн або вимога, яка його визначає?" data-optional="true">
     <div class="item-top">
-      <div class="num">6</div>
+      <div class="num">4</div>
       <div class="item-body">
         <h3>Чи є дедлайн або вимога, яка його визначає?</h3>
         <p>Конкретна дата, нормативний документ, внутрішнє рішення — що саме і чому саме до цього терміну.</p>
         <textarea maxlength="10000" placeholder="Ваша відповідь..."></textarea>
         <div class="charcount">0/10000</div>
         <div class="imgrow">
+          <button type="button" class="quickfill-btn" data-fill="Немає.">✅ Немає</button>
           <label class="filebtn">🖼️ Додати скріншот<input type="file" accept="image/*" multiple></label>
           <div class="thumbs"></div>
         </div>
@@ -293,8 +268,6 @@
       <input type="checkbox">
     </div>
   </div>
-
-  <div class="note">Немає відповіді на якийсь пункт? Це нормально — просто позначте галочкою, що пункт розглянуто, навіть якщо коментар короткий на кшталт "не застосовується". Головне — не залишати пункт без жодної позначки.</div>
 
   <button class="doc-btn" id="docBtn" disabled>📄 Сформувати Word-документ</button>
   <button class="pdf-btn" id="pdfBtn" disabled>🖨️ Зберегти як PDF</button>
@@ -335,12 +308,15 @@
   }
 
   function update(){
-    const total = requiredItems.length;
-    const checked = requiredItems.filter(item => item.querySelector('input[type=checkbox]').checked).length;
+    const total = items.length;
+    const checked = Array.from(items).filter(item => item.querySelector('input[type=checkbox]').checked).length;
     const pct = total ? Math.round((checked/total)*100) : 0;
     bar.style.width = pct + '%';
     count.textContent = `${checked}/${total}`;
-    const allDone = total > 0 && checked === total;
+
+    const requiredTotal = requiredItems.length;
+    const requiredChecked = requiredItems.filter(item => item.querySelector('input[type=checkbox]').checked).length;
+    const allDone = requiredTotal > 0 && requiredChecked === requiredTotal;
     docBtn.disabled = !allDone;
     pdfBtn.disabled = !allDone;
   }
@@ -366,6 +342,14 @@
       item.classList.toggle('checked', cb.checked);
       update();
     });
+
+    const quickfillBtn = item.querySelector('.quickfill-btn');
+    if (quickfillBtn) {
+      quickfillBtn.addEventListener('click', () => {
+        ta.value = quickfillBtn.dataset.fill || 'Немає.';
+        ta.dispatchEvent(new Event('input'));
+      });
+    }
 
     fileInput.addEventListener('change', () => {
       Array.from(fileInput.files).forEach(async file => {
@@ -427,9 +411,7 @@
   // виглядав як структурований документ вимог, а не як список питання-відповідь.
   const SECTION_TITLES = {
     'Що потрібно і навіщо?': 'Опис запиту та бізнес-мета',
-    'Хто буде цим користуватися?': 'Користувачі та зацікавлені сторони',
-    'Як це відбувається зараз?': 'Поточний стан (як зараз)',
-    'Що саме має змінитися?': 'Бажаний результат (що має змінитися)',
+    'Що саме має змінитися?': 'Поточний стан і бажаний результат (було / стало)',
     'Чи є дедлайн або вимога, яка його визначає?': 'Терміни та обмеження',
     'Чи є приклади або зразки?': 'Приклади та референси',
   };
