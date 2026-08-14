@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Бриф перед постановкою задачі</title>
+<style>
+  :root{
+    --page:#f9f9f7; --surface:#ffffff;
+    --ink:#0b0b0b; --ink2:#52514e; --muted:#898781;
+    --border:rgba(11,11,11,0.10); --grid:#e1e0d9;
+    --blue:#2a78d6; --good:#0f7a52; --good-soft:#e3f6ee;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--page);color:var(--ink);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.5;}
+  .wrap{max-width:820px;margin:0 auto;padding:36px 24px 60px;}
+
+  .hero{
+    background:linear-gradient(135deg,#12294f 0%, #1c5cab 55%, #2a78d6 100%);
+    border-radius:20px;padding:30px 34px;color:#fff;margin-bottom:22px;
+  }
+  .eyebrow{font-size:.76rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;
+    color:#bcd6f7;margin:0 0 8px;}
+  .hero h1{font-size:1.6rem;margin:0 0 8px;letter-spacing:-0.01em;}
+  .hero p{margin:0;color:#dce9fa;font-size:.94rem;max-width:620px;}
+
+  .progress-row{
+    display:flex;align-items:center;gap:12px;margin-bottom:14px;
+    background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:13px 16px;
+  }
+  .progress-label{font-size:.85rem;color:var(--ink2);white-space:nowrap;font-weight:600;}
+  .progress-bar-outer{background:var(--grid);border-radius:999px;height:8px;overflow:hidden;flex:1;}
+  .progress-bar-inner{background:var(--blue);height:100%;width:0%;transition:width .25s ease;}
+  .progress-count{font-weight:700;font-size:.88rem;color:var(--blue);white-space:nowrap;}
+
+  .filenote{
+    font-size:.8rem;color:var(--ink2);background:#fff8ea;border:1px solid #f0dfa8;
+    border-radius:10px;padding:10px 14px;margin-bottom:20px;
+  }
+  .filenote b{color:#8a6d1a;}
+
+  .item{
+    background:var(--surface);border:1px solid var(--border);border-radius:14px;
+    padding:16px 18px;margin-bottom:10px;
+  }
+  .item-top{display:flex;gap:14px;align-items:flex-start;}
+  .item input[type=checkbox]{
+    margin-top:4px;width:19px;height:19px;flex-shrink:0;accent-color:var(--blue);cursor:pointer;
+  }
+  .item .num{
+    width:26px;height:26px;border-radius:8px;background:var(--page);border:1px solid var(--border);
+    display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;color:var(--ink2);
+    flex-shrink:0;margin-top:1px;
+  }
+  .item-body{flex:1;}
+  .item h3{margin:0 0 3px;font-size:.98rem;}
+  .item p{margin:0 0 10px;font-size:.84rem;color:var(--ink2);}
+  .item.checked{background:var(--good-soft);}
+  .item.checked h3{color:var(--good);}
+
+  .item textarea{
+    width:100%;resize:vertical;min-height:64px;border:1px solid var(--grid);border-radius:10px;
+    padding:10px 12px;font-family:inherit;font-size:.9rem;color:var(--ink);background:var(--page);
+  }
+  .item textarea:focus{outline:2px solid var(--blue);outline-offset:1px;}
+  .charcount{text-align:right;font-size:.72rem;color:var(--muted);margin-top:4px;}
+  .charcount.limit{color:#c0392b;font-weight:700;}
+
+  .imgrow{display:flex;align-items:center;gap:10px;margin-top:10px;flex-wrap:wrap;}
+  .imgrow label.filebtn{
+    font-size:.78rem;font-weight:600;color:var(--blue);border:1px dashed var(--blue);
+    border-radius:8px;padding:7px 12px;cursor:pointer;background:#eef5fd;
+  }
+  .imgrow input[type=file]{display:none;}
+  .thumbs{display:flex;gap:8px;flex-wrap:wrap;}
+  .thumb{position:relative;width:56px;height:56px;border-radius:8px;overflow:hidden;border:1px solid var(--border);}
+  .thumb img{width:100%;height:100%;object-fit:cover;display:block;}
+  .thumb .rm{
+    position:absolute;top:0;right:0;background:rgba(0,0,0,.55);color:#fff;border:none;
+    width:18px;height:18px;font-size:.7rem;line-height:1;cursor:pointer;border-bottom-left-radius:6px;
+  }
+
+  .note{
+    font-size:.85rem;color:var(--ink2);background:var(--surface);
+    border-left:3px solid var(--blue);padding:12px 16px;border-radius:8px;margin:18px 0;
+  }
+
+  .doc-btn{
+    display:block;width:100%;margin-top:6px;padding:15px;border:none;border-radius:14px;
+    font-size:1rem;font-weight:700;cursor:not-allowed;
+    background:#e1e0d9;color:var(--muted);transition:background .2s ease, color .2s ease;
+  }
+  .doc-btn:enabled{background:var(--blue);color:#fff;cursor:pointer;}
+  .doc-btn:enabled:hover{background:#1c5cab;}
+
+  .clear-btn{
+    display:block;width:100%;margin-top:8px;padding:10px;border:1px solid var(--border);border-radius:12px;
+    font-size:.84rem;font-weight:600;cursor:pointer;background:var(--surface);color:var(--ink2);
+    transition:background .2s ease, border-color .2s ease;
+  }
+  .clear-btn:hover{background:#faf7f0;border-color:#c0392b;color:#c0392b;}
+
+  @media print{ .progress-row,.doc-btn,.clear-btn{display:none;} body{background:#fff;} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hero">
+    <p class="eyebrow">Попередній бриф · перед постановкою задачі</p>
+    <h1>Чек-лист перед тим, як ставити задачу розробнику</h1>
+    <p>Дайте коротку відповідь на кожен пункт (до 10 000 знаків) — це прибирає більшість зайвих уточнень і пришвидшує старт роботи над задачею.</p>
+  </div>
+
+  <div class="progress-row">
+    <span class="progress-label">Заповнено</span>
+    <div class="progress-bar-outer"><div class="progress-bar-inner" id="bar"></div></div>
+    <span class="progress-count" id="count">0/9</span>
+  </div>
+
+  <div class="filenote">
+    <b>Про файли:</b> зображення (PNG/JPG/GIF) можна прикріпити прямо тут — вони вставляються всередину Word-документа. Інші формати (PDF, DOCX, XLSX тощо) у документ автоматично не вбудовуються — просто надішліть їх окремими файлами разом із цим бріфом.
+    <br><b>Важливо:</b> нічого не зберігається автоматично — не оновлюйте й не закривайте сторінку, поки не натиснете кнопку внизу й не завантажите готовий документ.
+  </div>
+
+  <div class="item" data-q="Що потрібно?">
+    <div class="item-top">
+      <div class="num">1</div>
+      <div class="item-body">
+        <h3>Що потрібно?</h3>
+        <p>Коротко, своїми словами: що саме ви хочете отримати в результаті.</p>
+        <textarea maxlength="10000" placeholder="Ваша відповідь..."></textarea>
+        <div class="charcount">0/10000</div>
+        <div class="imgrow">
+          <label class="filebtn">🖼️ Додати скріншот<input type="file" accept="image/*" multiple></label>
+          <div class="thumbs"></div>
+        </div>
+      </div>
+      <input type="checkbox">
+    </div>
+  </div>
+
+  <div class="item" data-q="Навіщо це потрібно?">
+    <div class="item-top">
+      <div class="num">2</div>
+      <div class="item-body">
+        <h3>Навіщо це потрібно?</h3>
+        <p>Яку проблему це вирішує або яку мету переслідує. "Що" без "навіщо" легко зрозуміти неправильно.</p>
+        <textarea maxlength="10000" placeholder="Ваша відповідь..."></textarea>
+        <div class="charcount">0/10000</div>
+        <div class="imgrow">
+          <label class="filebtn">🖼️ Додати скріншот<input type="file" accept="image/*" multiple></label>
+          <div class="thumbs"></div>
+        </div>
+      </div>
+      <input type="checkbox">
+    </div>
+  </div>
+
+  <div class="item" data-q="Хто буде цим користуватися?">
+    <div class="item-top">
+      <div class="num">3</div>
+      <div class="item-body">
+        <h3>Хто буде цим користуватися?</h3>
+        <p>Клієнти, співробітники банку, конкретний підрозділ чи роль.</p>
+        <textarea maxlength="10000" placeholder="Ваша відповідь..."></textarea>
+        <div class="charcount">0/10000</div>
+        <div class="imgrow">
+          <label class="filebtn">🖼️ Додати скріншот<input type="file" accept="image/*" multiple></label>
+          <div class="thumbs"></div>
+        </div>
+      </div>
+      <input type="checkbox">
+    </div>
+  </div>
+
+  <div class="item" data-q="Як це відбувається зараз?">
+    <div class="item-top">
+      <div class="num">4</div>
+      <div class="item-body">
+        <h3>Як це відбувається зараз?</h3>
+        <p>Поточний спосіб, якщо він є. Якщо немає — так і напишіть: "наразі немає". Якщо не знаєте всіх технічних деталей — не страшно, просто опишіть, що бачите зі свого боку, решту уточнимо самі.</p>
+        <textarea maxlength="10000" placeholder="Ваша відповідь..."></textarea>
+        <div class="charcount">0/10000</div>
+        <div class="imgrow">
+          <label class="filebtn">🖼️ Додати скріншот<input type="file" accept="image/*" multiple></label>
+          <div class="thumbs"></div>
+        </div>
+      </div>
+      <input type="checkbox">
+    </div>
+  </div>
+
+  <div class="item" data-q="Що саме має змінитися?">
+    <div class="item-top">
+      <div class="num">5</div>
+      <div class="item-body">
+        <h3>Що саме має змінитися?</h3>
+        <p>Опишіть бажаний результат. Якщо можливо — у форматі "було / стало".</p>
+        <textarea maxlength="10000" placeholder="Ваша відповідь..."></textarea>
+        <div class="charcount">0/10000</div>
+        <div class="imgrow">
+          <label class="filebtn">🖼️ Додати скріншот<input type="file" accept="image/*" multiple></label>
+          <div class="thumbs"></div>
+        </div>
+      </div>
+      <input type="checkbox">
+    </div>
+  </div>
+
+  <div class="item" data-q="Чи зачіпає це інші системи, підрозділи або процеси?">
+    <div class="item-top">
+      <div class="num">6</div>
+      <div class="item-body">
+        <h3>Чи зачіпає це інші системи, підрозділи або процеси?</h3>
+        <p>Наприклад: потрібна інтеграція з іншою системою, дані від суміжного підрозділу, документ чи звіт, на який це вплине. Технічну відповідь знати не обов'язково — досить припущення "здається, це зачепить...".</p>
+        <textarea maxlength="10000" placeholder="Ваша відповідь..."></textarea>
+        <div class="charcount">0/10000</div>
+        <div class="imgrow">
+          <label class="filebtn">🖼️ Додати скріншот<input type="file" accept="image/*" multiple></label>
+          <div class="thumbs"></div>
+        </div>
+      </div>
+      <input type="checkbox">
+    </div>
+  </div>
+
+  <div class="item" data-q="Чи є дедлайн або вимога, яка його визначає?">
+    <div class="item-top">
+      <div class="num">7</div>
+      <div class="item-body">
+        <h3>Чи є дедлайн або вимога, яка його визначає?</h3>
+        <p>Конкретна дата, нормативний документ, внутрішнє рішення — що саме і чому саме до цього терміну.</p>
+        <textarea maxlength="10000" placeholder="Ваша відповідь..."></textarea>
+        <div class="charcount">0/10000</div>
+        <div class="imgrow">
+          <label class="filebtn">🖼️ Додати скріншот<input type="file" accept="image/*" multiple></label>
+          <div class="thumbs"></div>
+        </div>
+      </div>
+      <input type="checkbox">
+    </div>
+  </div>
+
+  <div class="item" data-q="Чи є приклади або зразки?">
+    <div class="item-top">
+      <div class="num">8</div>
+      <div class="item-body">
+        <h3>Чи є приклади або зразки?</h3>
+        <p>Скріншоти, посилання, приклад з іншої системи чи вже наявного процесу.</p>
+        <textarea maxlength="10000" placeholder="Ваша відповідь..."></textarea>
+        <div class="charcount">0/10000</div>
+        <div class="imgrow">
+          <label class="filebtn">🖼️ Додати скріншот<input type="file" accept="image/*" multiple></label>
+          <div class="thumbs"></div>
+        </div>
+      </div>
+      <input type="checkbox">
+    </div>
+  </div>
+
+  <div class="item" data-q="Чого ця задача точно не стосується?">
+    <div class="item-top">
+      <div class="num">9</div>
+      <div class="item-body">
+        <h3>Чого ця задача точно не стосується?</h3>
+        <p>Якщо є суміжний випадок, який могли б сплутати з цією задачею — вкажіть, що він сюди не входить. Наприклад: «стосується тільки ФОП, ЮО без змін» або «тільки веб-версія, мобільний застосунок не чіпаємо». Немає такого — напишіть «обмежень немає».</p>
+        <textarea maxlength="10000" placeholder="Ваша відповідь..."></textarea>
+        <div class="charcount">0/10000</div>
+        <div class="imgrow">
+          <label class="filebtn">🖼️ Додати скріншот<input type="file" accept="image/*" multiple></label>
+          <div class="thumbs"></div>
+        </div>
+      </div>
+      <input type="checkbox">
+    </div>
+  </div>
+
+  <div class="note">Немає відповіді на якийсь пункт? Це нормально — просто позначте галочкою, що пункт розглянуто, навіть якщо коментар короткий на кшталт "не застосовується". Головне — не залишати пункт без жодної позначки.</div>
+
+  <button class="doc-btn" id="docBtn" disabled>📄 Сформувати Word-документ</button>
+  <button class="clear-btn" id="clearBtn">🗑️ Очистити форму</button>
+
+</div>
+
+<script>
+  const items = document.querySelectorAll('.item');
+  const bar = document.getElementById('bar');
+  const count = document.getElementById('count');
+  const docBtn = document.getElementById('docBtn');
+  const MAXLEN = 10000;
+
+  function update(){
+    const total = items.length;
+    const checked = document.querySelectorAll('.item input[type=checkbox]:checked').length;
+    const pct = total ? Math.round((checked/total)*100) : 0;
+    bar.style.width = pct + '%';
+    count.textContent = `${checked}/${total}`;
+    docBtn.disabled = !(total > 0 && checked === total);
+  }
+
+  items.forEach(item => {
+    const cb = item.querySelector('input[type=checkbox]');
+    const ta = item.querySelector('textarea');
+    const cc = item.querySelector('.charcount');
+    const fileInput = item.querySelector('input[type=file]');
+    const thumbs = item.querySelector('.thumbs');
+    item._images = [];
+
+    ta.addEventListener('input', () => {
+      const len = ta.value.length;
+      cc.textContent = `${len}/${MAXLEN}`;
+      cc.classList.toggle('limit', len >= MAXLEN);
+      cb.checked = ta.value.trim().length > 0;
+      item.classList.toggle('checked', cb.checked);
+      update();
+    });
+
+    cb.addEventListener('change', () => {
+      item.classList.toggle('checked', cb.checked);
+      update();
+    });
+
+    fileInput.addEventListener('change', () => {
+      Array.from(fileInput.files).forEach(async file => {
+        if (!file.type.startsWith('image/')) {
+          alert(`«${file.name}» — це не зображення, тому прикріпити його сюди не можна. Надішліть цей файл окремо разом із бріфом.`);
+          return;
+        }
+        try {
+          const rec = await resizeImage(file, 620);
+          rec.name = file.name;
+          item._images.push(rec);
+          const t = document.createElement('div');
+          t.className = 'thumb';
+          t.innerHTML = `<img src="${rec.dataUrl}" alt="${file.name}"><button class="rm" title="Прибрати">×</button>`;
+          t.querySelector('.rm').addEventListener('click', () => {
+            item._images = item._images.filter(r => r !== rec);
+            t.remove();
+          });
+          thumbs.appendChild(t);
+        } catch (err) {
+          alert(`Не вдалося додати «${file.name}»: файл пошкоджений або не є зображенням. Надішліть його окремо разом із бріфом.`);
+        }
+      });
+      fileInput.value = '';
+    });
+  });
+
+  // Downscales an image client-side (canvas) so it never blows up the page width
+  // once embedded in the generated Word document — Word doesn't reliably respect
+  // CSS max-width on embedded images, so we shrink the actual pixels instead.
+  function resizeImage(file, maxWidth){
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onerror = () => reject(new Error('Не вдалося прочитати файл'));
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onerror = () => reject(new Error('Файл не є зображенням, яке можна відобразити'));
+        img.onload = () => {
+          let { width, height } = img;
+          if (width > maxWidth) {
+            height = Math.round(height * (maxWidth / width));
+            width = maxWidth;
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+          resolve({ dataUrl: canvas.toDataURL('image/jpeg', 0.82), width, height });
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // Мапа "питання анкети" → "назва розділу в документі", щоб згенерований файл одразу
+  // виглядав як структурований документ вимог, а не як список питання-відповідь.
+  const SECTION_TITLES = {
+    'Що потрібно?': 'Опис запиту',
+    'Навіщо це потрібно?': 'Бізнес-мета',
+    'Хто буде цим користуватися?': 'Користувачі та зацікавлені сторони',
+    'Як це відбувається зараз?': 'Поточний стан (як зараз)',
+    'Що саме має змінитися?': 'Бажаний результат (що має змінитися)',
+    'Чи зачіпає це інші системи, підрозділи або процеси?': 'Суміжні системи та залежності',
+    'Чи є дедлайн або вимога, яка його визначає?': 'Терміни та обмеження',
+    'Чи є приклади або зразки?': 'Приклади та референси',
+    'Чого ця задача точно не стосується?': 'Межі задачі (що не входить)',
+  };
+
+  docBtn.addEventListener('click', () => {
+    if (docBtn.disabled) return;
+
+    const rows = Array.from(items).map(item => {
+      const question = item.dataset.q;
+      const heading = SECTION_TITLES[question] || question;
+      const answer = (item.querySelector('textarea').value || '(не застосовується)')
+        .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+        .replace(/\n/g,'<br>');
+      const imgs = (item._images || []).map(rec =>
+        `<img src="${rec.dataUrl}" width="${rec.width}" height="${rec.height}" style="display:block;margin:6pt 0;border:1px solid #ccc;">`
+      ).join('\n');
+      return `<h2 style="font-family:Calibri,Arial,sans-serif;font-size:14pt;color:#1c5cab;margin:18pt 0 4pt;page-break-after:avoid;mso-pagination:widow-orphan;">${heading}</h2>
+               <p style="font-family:Calibri,Arial,sans-serif;font-size:8pt;color:#999;font-style:italic;margin:0 0 5pt;">${question}</p>
+               <p style="font-family:Calibri,Arial,sans-serif;font-size:11pt;color:#000;margin:0 0 6pt;">${answer}</p>
+               ${imgs}`;
+    }).join('\n');
+
+    const docHtml = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+      <head><meta charset="utf-8"><title>Бриф перед постановкою задачі</title></head>
+      <body>
+        <h1 style="font-family:Calibri,Arial,sans-serif;font-size:18pt;color:#12294f;">Бриф перед постановкою задачі</h1>
+        <p style="font-family:Calibri,Arial,sans-serif;font-size:10pt;color:#555;">Сформовано ${new Date().toLocaleDateString('uk-UA')}</p>
+        ${rows}
+        <p style="font-family:Calibri,Arial,sans-serif;font-size:9pt;color:#888;margin-top:20pt;border-top:1px solid #ccc;padding-top:8pt;">
+          Примітка: зображення вбудовані в цей документ. Файли інших форматів (PDF, DOCX, XLSX тощо) в документ не вбудовуються автоматично — надішліть їх окремо разом із цим документом в заявці JIRA.
+        </p>
+      </body>
+    </html>`;
+
+    const now = new Date();
+    const dd = String(now.getDate()).padStart(2, '0');
+    const mm = String(now.getMonth() + 1).padStart(2, '0');
+    const yyyy = now.getFullYear();
+    const fileName = `CL_BRD brief_${dd}.${mm}.${yyyy}.doc`;
+
+    const blob = new Blob(['﻿', docHtml], { type: 'application/msword' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  });
+
+  const clearBtn = document.getElementById('clearBtn');
+  clearBtn.addEventListener('click', () => {
+    const hasContent = Array.from(items).some(item => item.querySelector('textarea').value.trim().length > 0 || (item._images || []).length > 0);
+    if (hasContent && !confirm('Очистити всі введені відповіді та прикріплені скріншоти? Це не можна скасувати.')) return;
+
+    items.forEach(item => {
+      const cb = item.querySelector('input[type=checkbox]');
+      const ta = item.querySelector('textarea');
+      const cc = item.querySelector('.charcount');
+      const thumbs = item.querySelector('.thumbs');
+      ta.value = '';
+      cc.textContent = `0/${MAXLEN}`;
+      cc.classList.remove('limit');
+      cb.checked = false;
+      item.classList.remove('checked');
+      item._images = [];
+      thumbs.innerHTML = '';
+    });
+    update();
+  });
+
+  update();
+</script>
+</body>
+</html>
