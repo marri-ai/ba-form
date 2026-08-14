@@ -306,7 +306,7 @@
 
   <button class="doc-btn" id="docBtn" disabled>📄 Сформувати Word-документ</button>
   <button class="pdf-btn" id="pdfBtn" disabled>🖨️ Зберегти як PDF</button>
-  <p class="pdf-hint"><b>Рекомендовано для iPhone / мобільних</b> — на телефоні Word-документ може не завантажитись коректно, а PDF через друк зберігається завжди, разом із прикріпленими картинками.</p>
+  <p class="pdf-hint"><b>Рекомендовано для iPhone / мобільних</b> — на телефоні Word-документ може не завантажитись коректно. Для PDF: відкрийте цю сторінку саме в Safari (не в Viber/Telegram/пошті), натисніть кнопку, у вікні друку розтягніть прев'ю двома пальцями на весь екран — воно стане повноцінним PDF, після чого натисніть значок «Поділитися» → «Зберегти у Файли».</p>
   <button class="clear-btn" id="clearBtn">🗑️ Очистити форму</button>
 
 </div>
@@ -333,12 +333,9 @@
     const pct = total ? Math.round((checked/total)*100) : 0;
     bar.style.width = pct + '%';
     count.textContent = `${checked}/${total}`;
-    docBtn.disabled = !(total > 0 && checked === total);
-
-    const hasContent = Array.from(items).some(item =>
-      item.querySelector('textarea').value.trim().length > 0 || (item._images || []).length > 0
-    );
-    pdfBtn.disabled = !hasContent;
+    const allDone = total > 0 && checked === total;
+    docBtn.disabled = !allDone;
+    pdfBtn.disabled = !allDone;
   }
 
   items.forEach(item => {
@@ -483,13 +480,28 @@
   const expandedTextareas = [];
 
   pdfBtn.addEventListener('click', () => {
+    // На iPhone window.print() мовчки нічого не робить (без помилки), якщо сторінку
+    // відкрито не в самому Safari — а в вбудованому браузері месенджера/пошти
+    // (Viber, Telegram, Outlook тощо) або як ярлик, доданий на головний екран.
+    const isStandalone = window.navigator.standalone === true ||
+      (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches);
+    if (typeof window.print !== 'function' || isStandalone) {
+      alert('Друк недоступний у цьому вікні. Відкрийте це посилання у звичайному Safari (не в застосунку-месенджері й не з ярлика на головному екрані) і натисніть кнопку ще раз.');
+      return;
+    }
+
     document.title = `CL_BRD brief_${getDateStr()}`;
     document.querySelectorAll('.item textarea').forEach(ta => {
       expandedTextareas.push({ el: ta, height: ta.style.height });
       ta.style.height = 'auto';
       ta.style.height = ta.scrollHeight + 'px';
     });
-    window.print();
+
+    try {
+      window.print();
+    } catch (err) {
+      alert('Не вдалося відкрити діалог друку. Відкрийте цю сторінку в Safari і спробуйте ще раз.');
+    }
   });
 
   window.addEventListener('afterprint', () => {
