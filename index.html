@@ -113,6 +113,13 @@
   }
   .pdf-hint b{color:#0f7a52;}
 
+  .copylink-btn{
+    display:block;width:100%;margin-top:8px;padding:10px;border:1px solid var(--border);border-radius:12px;
+    font-size:.82rem;font-weight:600;cursor:pointer;background:#eef5fd;color:var(--blue);
+    transition:background .2s ease;
+  }
+  .copylink-btn:hover{background:#dbe9fb;}
+
   @media print{
     .progress-row,.doc-btn,.clear-btn,.pdf-btn,.pdf-hint,.filenote,.note{display:none;}
     .item input[type=checkbox]{display:none;}
@@ -306,7 +313,9 @@
 
   <button class="doc-btn" id="docBtn" disabled>📄 Сформувати Word-документ</button>
   <button class="pdf-btn" id="pdfBtn" disabled>🖨️ Зберегти як PDF</button>
-  <p class="pdf-hint"><b>Рекомендовано для iPhone / мобільних</b> — на телефоні Word-документ може не завантажитись коректно. Для PDF: відкрийте цю сторінку саме в Safari (не в Viber/Telegram/пошті), натисніть кнопку, у вікні друку розтягніть прев'ю двома пальцями на весь екран — воно стане повноцінним PDF, після чого натисніть значок «Поділитися» → «Зберегти у Файли».</p>
+  <p class="pdf-hint"><b>Рекомендовано для iPhone / мобільних</b> — на телефоні Word-документ може не завантажитись коректно. PDF зберігається через друк, але <b>працює лише в самому Safari</b>. Якщо форма відкрита в Telegram, Viber чи пошті — кнопка друку може взагалі нічого не робити: скопіюйте посилання нижче і відкрийте його в Safari.</p>
+  <button class="copylink-btn" id="copyLinkBtn" type="button">🔗 Скопіювати посилання (для Safari)</button>
+  <p class="pdf-hint">У вікні друку в Safari розтягніть прев'ю двома пальцями на весь екран — воно стане повноцінним PDF, тоді натисніть значок «Поділитися» → «Зберегти у Файли».</p>
   <button class="clear-btn" id="clearBtn">🗑️ Очистити форму</button>
 
 </div>
@@ -501,6 +510,42 @@
       window.print();
     } catch (err) {
       alert('Не вдалося відкрити діалог друку. Відкрийте цю сторінку в Safari і спробуйте ще раз.');
+    }
+  });
+
+  const copyLinkBtn = document.getElementById('copyLinkBtn');
+  copyLinkBtn.addEventListener('click', async () => {
+    const url = window.location.href;
+    const restoreText = copyLinkBtn.textContent;
+    const showCopied = () => {
+      copyLinkBtn.textContent = '✅ Скопійовано! Вставте в адресний рядок Safari';
+      setTimeout(() => { copyLinkBtn.textContent = restoreText; }, 2500);
+    };
+
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(url);
+        showCopied();
+        return;
+      }
+      throw new Error('Clipboard API недоступний');
+    } catch (err) {
+      // Fallback для webview без доступу до Clipboard API (частина месенджерів це блокує).
+      const tmp = document.createElement('textarea');
+      tmp.value = url;
+      tmp.style.position = 'fixed';
+      tmp.style.opacity = '0';
+      document.body.appendChild(tmp);
+      tmp.focus();
+      tmp.select();
+      let copied = false;
+      try { copied = document.execCommand('copy'); } catch (e) {}
+      document.body.removeChild(tmp);
+      if (copied) {
+        showCopied();
+      } else {
+        prompt('Не вдалося скопіювати автоматично. Скопіюйте посилання вручну:', url);
+      }
     }
   });
 
