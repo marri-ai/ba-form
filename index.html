@@ -116,7 +116,8 @@
     font-size:.84rem;font-weight:600;cursor:pointer;background:var(--surface);color:var(--ink2);
     transition:background .2s ease, border-color .2s ease;
   }
-  .clear-btn:hover{background:rgba(192,57,43,.12);border-color:#c0392b;color:#c0392b;}
+  .clear-btn:enabled:hover{background:rgba(192,57,43,.12);border-color:#c0392b;color:#c0392b;}
+  .clear-btn:disabled{cursor:not-allowed;color:var(--muted);opacity:.6;}
 
   .pdf-btn{
     display:block;width:100%;margin-top:8px;padding:11px;border:1px solid rgba(15,122,82,.4);border-radius:12px;
@@ -136,6 +137,11 @@
     transition:background .2s ease;
   }
   .copylink-btn:hover{filter:brightness(1.1);}
+
+  .footer-credit{
+    font-size:.72rem;color:var(--muted);text-align:center;margin:20px 0 0;line-height:1.6;
+  }
+  .footer-credit a{color:var(--blue);}
 
   .theme-toggle{
     position:fixed;top:14px;right:14px;z-index:50;width:40px;height:40px;border-radius:50%;
@@ -159,7 +165,7 @@
       --border:rgba(11,11,11,0.10); --grid:#e1e0d9;
       --blue:#1c5cab; --good:#0f7a52; --good-soft:#e3f6ee;
     }
-    .progress-row,.doc-btn,.clear-btn,.pdf-btn,.pdf-hint,.filenote,.copylink-btn,.theme-toggle{display:none;}
+    .progress-row,.doc-btn,.clear-btn,.pdf-btn,.pdf-hint,.filenote,.copylink-btn,.theme-toggle,.footer-credit{display:none;}
     .imgrow label.filebtn{display:none;}
     .quickfill-btn{display:none;}
     .thumb .rm{display:none;}
@@ -187,7 +193,7 @@
   <div class="progress-row">
     <span class="progress-label">Заповнено</span>
     <div class="progress-bar-outer"><div class="progress-bar-inner" id="bar"></div></div>
-    <span class="progress-count" id="count">0/4</span>
+    <span class="progress-count" id="count">0/5</span>
   </div>
 
   <div class="filenote">
@@ -200,7 +206,7 @@
       <div class="num">1</div>
       <div class="item-body">
         <h3>Що потрібно і навіщо?</h3>
-        <p>Коротко, своїми словами: що саме ви хочете отримати в результаті, хто буде цим користуватися (клієнти, співробітники банку, конкретний підрозділ чи роль), і яку проблему це вирішує або яку мету переслідує. "Що" без "навіщо" легко зрозуміти неправильно. Якщо є суміжний випадок, який могли б сплутати з цією задачею — вкажіть, чого це точно не стосується (наприклад, "тільки ФОП, ЮО без змін" або "тільки веб-версія, мобільний застосунок не чіпаємо").</p>
+        <p>Що саме ви хочете отримати в результаті, хто буде цим користуватися (клієнти, співробітники банку, конкретний підрозділ/роль), і яку проблему це вирішує або яку мету має. "Що" без "навіщо" легко зрозуміти неправильно. Якщо є інформація чого це не стосується — вкажіть (наприклад, "тільки ФОП, ЮО без змін" або "тільки веб-версія, мобільний застосунок не чіпаємо").</p>
         <textarea maxlength="10000" placeholder="Ваша відповідь..."></textarea>
         <div class="charcount">0/10000</div>
         <div class="imgrow">
@@ -216,7 +222,7 @@
       <div class="num">2</div>
       <div class="item-body">
         <h3>Що саме має змінитися?</h3>
-        <p>Опишіть поточний стан і бажаний результат у форматі "було / стало". Якщо поточного способу немає — так і напишіть: "було — наразі немає". Якщо не знаєте всіх технічних деталей — не страшно, просто опишіть, що бачите зі свого боку, решту уточнимо самі.</p>
+        <p>Опишіть поточний стан і бажаний результат у форматі "було / стало". Якщо поточного способу немає — так і напишіть: новий функціонал/вимога. Якщо є винятки чи різні правила для різних випадків (наприклад, окремо для ФОП і ЮО) — вкажіть це одразу. Якщо не знаєте всіх технічних деталей — не страшно, просто опишіть, що бачите зі свого боку, решту уточнимо самі.</p>
         <textarea maxlength="10000" placeholder="Ваша відповідь..."></textarea>
         <div class="charcount">0/10000</div>
         <div class="imgrow">
@@ -232,7 +238,7 @@
       <div class="num">3</div>
       <div class="item-body">
         <h3>Чи є приклади або зразки?</h3>
-        <p>Скріншоти, посилання, приклад з іншої системи чи вже наявного процесу.</p>
+        <p>Посилання, скріншот, макет, або приклад з іншого банку/розділу застосунку — будь-що, що показує, як це має виглядати чи працювати.</p>
         <textarea maxlength="10000" placeholder="Ваша відповідь..."></textarea>
         <div class="charcount">0/10000</div>
         <div class="imgrow">
@@ -249,11 +255,29 @@
       <div class="num">4</div>
       <div class="item-body">
         <h3>Чи є дедлайн або вимога, яка його визначає?</h3>
-        <p>Конкретна дата, нормативний документ, внутрішнє рішення — що саме і чому саме до цього терміну.</p>
+        <p>Конкретна дата, нормативний документ, внутрішнє рішення — що саме і чому саме до цього терміну. Якщо жорсткого дедлайну немає — все одно вкажіть, наскільки це критично.</p>
         <textarea maxlength="10000" placeholder="Ваша відповідь..."></textarea>
         <div class="charcount">0/10000</div>
         <div class="imgrow">
-          <button type="button" class="quickfill-btn" data-fill="Немає.">✅ Немає</button>
+          <button type="button" class="quickfill-btn" data-fill="Не критично, можна по мірі завантаженості команди.">🟢 Не критично</button>
+          <button type="button" class="quickfill-btn" data-fill="Жорсткого дедлайну немає, але бажано найближчим часом.">🟡 Бажано найближчим часом</button>
+          <button type="button" class="quickfill-btn" data-fill="Терміново (до [дата])." data-select="[дата]">🔴 Терміново (до __)</button>
+          <label class="filebtn">🖼️ Додати скріншот<input type="file" accept="image/*" multiple></label>
+          <div class="thumbs"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="item" data-q="Як перевірити, що зроблено саме те, що потрібно?" data-optional="true">
+    <div class="item-top">
+      <div class="num">5</div>
+      <div class="item-body">
+        <h3>Як перевірити, що зроблено саме те, що потрібно?</h3>
+        <p>Один приклад: яка дія і який результат покажуть, що все працює правильно? (наприклад: "клієнт подає заявку → отримує відповідь протягом дня" або "звіт формується автоматично без ручних правок").</p>
+        <textarea maxlength="10000" placeholder="Ваша відповідь..."></textarea>
+        <div class="charcount">0/10000</div>
+        <div class="imgrow">
           <label class="filebtn">🖼️ Додати скріншот<input type="file" accept="image/*" multiple></label>
           <div class="thumbs"></div>
         </div>
@@ -267,6 +291,8 @@
   <button class="copylink-btn" id="copyLinkBtn" type="button">🔗 Скопіювати посилання (для Safari)</button>
   <p class="pdf-hint">У вікні друку в Safari розтягніть прев'ю двома пальцями на весь екран — воно стане повноцінним PDF, тоді натисніть значок «Поділитися» → «Зберегти у Файли».</p>
   <button class="clear-btn" id="clearBtn">🗑️ Очистити форму</button>
+
+  <p class="footer-credit">© UNITY-BARS. Усі права захищено.<br>Питання й пропозиції щодо форми: <a href="mailto:mariia.zadorozhniuk@unity-bars.com">mariia.zadorozhniuk@unity-bars.com</a></p>
 
 </div>
 
@@ -303,6 +329,10 @@
     return item.querySelector('textarea').value.trim().length > 0;
   }
 
+  function hasAnyContent(){
+    return Array.from(items).some(item => isAnswered(item) || (item._images || []).length > 0);
+  }
+
   function update(){
     const total = items.length;
     const checked = Array.from(items).filter(isAnswered).length;
@@ -315,6 +345,7 @@
     const allDone = requiredTotal > 0 && requiredChecked === requiredTotal;
     docBtn.disabled = !allDone;
     pdfBtn.disabled = !allDone;
+    clearBtn.disabled = !hasAnyContent();
   }
 
   items.forEach(item => {
@@ -332,13 +363,20 @@
       update();
     });
 
-    const quickfillBtn = item.querySelector('.quickfill-btn');
-    if (quickfillBtn) {
+    item.querySelectorAll('.quickfill-btn').forEach(quickfillBtn => {
       quickfillBtn.addEventListener('click', () => {
-        ta.value = quickfillBtn.dataset.fill || 'Немає.';
+        const fill = quickfillBtn.dataset.fill || 'Немає.';
+        ta.value = fill;
         ta.dispatchEvent(new Event('input'));
+
+        const marker = quickfillBtn.dataset.select;
+        const idx = marker ? fill.indexOf(marker) : -1;
+        if (idx !== -1) {
+          ta.focus();
+          ta.setSelectionRange(idx, idx + marker.length);
+        }
       });
-    }
+    });
 
     fileInput.addEventListener('change', () => {
       Array.from(fileInput.files).forEach(async file => {
@@ -403,6 +441,7 @@
     'Що саме має змінитися?': 'Поточний стан і бажаний результат (було / стало)',
     'Чи є дедлайн або вимога, яка його визначає?': 'Терміни та обмеження',
     'Чи є приклади або зразки?': 'Приклади та референси',
+    'Як перевірити, що зроблено саме те, що потрібно?': 'Критерій прийняття',
   };
 
   docBtn.addEventListener('click', () => {
@@ -525,8 +564,8 @@
 
   const clearBtn = document.getElementById('clearBtn');
   clearBtn.addEventListener('click', () => {
-    const hasContent = Array.from(items).some(item => item.querySelector('textarea').value.trim().length > 0 || (item._images || []).length > 0);
-    if (hasContent && !confirm('Очистити всі введені відповіді та прикріплені скріншоти? Це не можна скасувати.')) return;
+    if (clearBtn.disabled) return;
+    if (!confirm('Очистити всі введені відповіді та прикріплені скріншоти? Це не можна скасувати.')) return;
 
     items.forEach(item => {
       const ta = item.querySelector('textarea');
