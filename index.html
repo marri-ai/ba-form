@@ -94,6 +94,8 @@
   .item.checked .num{background:var(--good);color:#fff;border-color:var(--good);transform:scale(1.08);}
   .item-body{flex:1;}
   .item h3{margin:0 0 3px;font-size:.98rem;}
+  .required-mark{color:var(--blue);font-weight:700;}
+  .item.checked .required-mark{color:var(--good);}
   .item p{margin:0 0 10px;font-size:.84rem;color:var(--ink2);}
   .item.checked{background:var(--good-soft);}
   .item.checked h3{color:var(--good);}
@@ -200,6 +202,7 @@
     .progress-row,.doc-btn,.clear-btn,.pdf-btn,.pdf-hint,.filenote,.copylink-btn,.theme-toggle,.footer-credit{display:none;}
     .imgrow label.filebtn{display:none;}
     .quickfill-btn{display:none;}
+    .required-mark{display:none;}
     .thumb .rm{display:none;}
     body{background:#fff;color:#000;}
     .hero{background:#fff !important;color:#12294f !important;padding:0 0 10px;border-radius:0;}
@@ -237,7 +240,7 @@
     <div class="item-top">
       <div class="num">1</div>
       <div class="item-body">
-        <h3>Що потрібно і навіщо?</h3>
+        <h3>Що потрібно і навіщо? <span class="required-mark" title="Обов'язковий пункт">*</span></h3>
         <p>Що саме ви хочете отримати в результаті, хто буде цим користуватися (клієнти, співробітники банку, конкретний підрозділ/роль), і яку проблему це вирішує або яку мету має. "Що" без "навіщо" легко зрозуміти неправильно. Якщо є інформація чого це не стосується — вкажіть (наприклад, "тільки ФОП, ЮО без змін" або "тільки веб-версія, мобільний застосунок не чіпаємо").</p>
         <textarea maxlength="10000" placeholder="Ваша відповідь..."></textarea>
         <div class="charcount">0/10000</div>
@@ -253,7 +256,7 @@
     <div class="item-top">
       <div class="num">2</div>
       <div class="item-body">
-        <h3>Що саме має змінитися?</h3>
+        <h3>Що саме має змінитися? <span class="required-mark" title="Обов'язковий пункт">*</span></h3>
         <p>Опишіть поточний стан і бажаний результат у форматі "було / стало". Якщо поточного способу немає — так і напишіть: новий функціонал/вимога. Якщо є винятки чи різні правила для різних випадків (наприклад, окремо для ФОП і ЮО) — вкажіть це одразу. Якщо не знаєте всіх технічних деталей — не страшно, просто опишіть, що бачите зі свого боку, решту уточнимо самі.</p>
         <textarea maxlength="10000" placeholder="Ваша відповідь..."></textarea>
         <div class="charcount">0/10000</div>
