@@ -285,9 +285,25 @@
     </div>
   </div>
 
-  <div class="item" data-q="Чи є дедлайн або вимога, яка його визначає?" data-optional="true">
+  <div class="item" data-q="Як перевірити, що зроблено саме те, що потрібно?" data-optional="true">
     <div class="item-top">
       <div class="num">4</div>
+      <div class="item-body">
+        <h3>Як перевірити, що зроблено саме те, що потрібно?</h3>
+        <p>Один приклад: яка дія і який результат покажуть, що все працює правильно? (наприклад: "клієнт подає заявку → отримує відповідь протягом дня" або "звіт формується автоматично без ручних правок").</p>
+        <textarea maxlength="10000" placeholder="Ваша відповідь..."></textarea>
+        <div class="charcount">0/10000</div>
+        <div class="imgrow">
+          <label class="filebtn">🖼️ Додати скріншот<input type="file" accept="image/*" multiple></label>
+          <div class="thumbs"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="item" data-q="Чи є дедлайн або вимога, яка його визначає?" data-optional="true">
+    <div class="item-top">
+      <div class="num">5</div>
       <div class="item-body">
         <h3>Чи є дедлайн або вимога, яка його визначає?</h3>
         <p>Конкретна дата, нормативний документ, внутрішнє рішення — що саме і чому саме до цього терміну. Якщо жорсткого дедлайну немає — все одно вкажіть, наскільки це критично.</p>
@@ -297,22 +313,6 @@
           <button type="button" class="quickfill-btn" data-fill="Не критично, можна по мірі завантаженості команди.">🟢 Не критично</button>
           <button type="button" class="quickfill-btn" data-fill="Жорсткого дедлайну немає, але бажано найближчим часом.">🟡 Бажано найближчим часом</button>
           <button type="button" class="quickfill-btn" data-fill="Терміново (до [дата])." data-select="[дата]">🔴 Терміново (до __)</button>
-          <label class="filebtn">🖼️ Додати скріншот<input type="file" accept="image/*" multiple></label>
-          <div class="thumbs"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="item" data-q="Як перевірити, що зроблено саме те, що потрібно?" data-optional="true">
-    <div class="item-top">
-      <div class="num">5</div>
-      <div class="item-body">
-        <h3>Як перевірити, що зроблено саме те, що потрібно?</h3>
-        <p>Один приклад: яка дія і який результат покажуть, що все працює правильно? (наприклад: "клієнт подає заявку → отримує відповідь протягом дня" або "звіт формується автоматично без ручних правок").</p>
-        <textarea maxlength="10000" placeholder="Ваша відповідь..."></textarea>
-        <div class="charcount">0/10000</div>
-        <div class="imgrow">
           <label class="filebtn">🖼️ Додати скріншот<input type="file" accept="image/*" multiple></label>
           <div class="thumbs"></div>
         </div>
@@ -490,9 +490,9 @@
   const SECTION_TITLES = {
     'Що потрібно і навіщо?': 'Опис запиту та бізнес-мета',
     'Що саме має змінитися?': 'Поточний стан і бажаний результат (було / стало)',
-    'Чи є дедлайн або вимога, яка його визначає?': 'Терміни та обмеження',
     'Чи є приклади або зразки?': 'Приклади та референси',
     'Як перевірити, що зроблено саме те, що потрібно?': 'Критерій прийняття',
+    'Чи є дедлайн або вимога, яка його визначає?': 'Терміни та обмеження',
   };
 
   docBtn.addEventListener('click', () => {
